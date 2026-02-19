@@ -1,114 +1,76 @@
-Smart Maintenance System
+# 🛠 Smart Maintenance System
 
-A simple and clean Maintenance Management System built using Spring Boot + MySQL.
+A simple and clean **Maintenance Management System** built using **Spring Boot + MySQL**.
 
 It helps track machines, schedule maintenance tasks, and monitor risk levels through an interactive dashboard.
 
-🚀 Features
+---
 
-Machine tracking
+## 🚀 Features
 
-Task scheduling
+- ✅ Machine tracking  
+- 📅 Task scheduling  
+- ⚠️ Risk level classification  
+- 🔴 Overdue detection  
+- 📊 Health percentage calculation  
+- 📥 Excel upload  
+- 📄 PDF export  
 
-Risk level classification
+---
 
-Overdue detection
+## 🖥 Application Screens
 
-Health percentage calculation
+### 📊 Dashboard
 
-Excel upload
+![Dashboard](/src/screenshots/dashboard-1.png)
 
-PDF export
+![Dashboard](/src/screenshots/dashboard-2.png)
 
-Dashboard analytics
+**Displays:**
+- Total Machines
+- High Risk Machines
+- Overdue Machines
+- Risk Distribution Chart
+- Machine Records Table
 
-🖥 Application Screens
+---
 
-![Dashboard](screenshots/dashboard-1.png)
+### 📅 Upcoming Tasks
 
-![Dashboard](screenshots/dashboard-2.png)
-📊 Dashboard
+![Upcoming Tasks](/src/screenshots/maintenance task records.png)
 
-Displays:
+- View scheduled tasks  
+- Mark tasks as complete  
+- Track maintenance progress  
 
-Total Machines
+---
 
-High Risk Machines
+### ➕ Schedule Task
 
-Overdue Machines
+![Schedule Task](screenshots/schedule-task.png)
 
-Risk Distribution Chart
+- Assign new maintenance tasks  
+- Select machine and date  
+- Automatically updates status  
 
-Machine Records Table
+---
 
-📅 Upcoming Tasks
+## 🏗 Tech Stack
 
-View scheduled tasks
+| Layer      | Technology       |
+|------------|-----------------|
+| Backend    | Spring Boot     |
+| Database   | MySQL           |
+| ORM        | Spring Data JPA |
+| Frontend   | Thymeleaf       |
+| Charts     | Chart.js        |
+| Build Tool | Maven           |
 
-Mark tasks as complete
+---
 
-Track maintenance progress
+## ⚙️ How to Run
 
-➕ Schedule Task
-
-Assign new maintenance tasks
-
-Select machine and date
-
-Automatically updates status
-
-🏗 Tech Stack
-
-Spring Boot
-
-Spring Data JPA
-
-MySQL
-
-Thymeleaf
-
-Maven
-
-Chart.js
-
-⚙️ How to Run
-git clone https://github.com/yourusername/maintenance.git
-cd maintenance
-mvn spring-boot:run
-
-
-Open:
-
-http://localhost:8080
-
-📁 Database
-
-Run the SQL file:
-
-src/main/resources/sql/maintenance_schema.sql
-
-🎯 Purpose
-
-This project demonstrates:
-
-Full-stack Spring Boot development
-
-Database relationships
-
-Dashboard UI design
-
-Real-world maintenance workflow logic
-
-⭐ If you found this helpful, consider starring the repository.
-
-🔥 Why This Version Is Better
-
-Short sections
-
-Easy to scan
-
-Clean spacing
-
-Screenshots explain UI instead of long paragraphs
-
-Recruiter-friendly
+```bash
+git clone https://github.com/yourusername/Machine-Maintenance-Scheduler-Microservice.git
+cd Machine-Maintenance-Scheduler-Microservice
+.\mvnw.cmd spring-boot:run
