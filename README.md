@@ -22,9 +22,9 @@ It helps track machines, schedule maintenance tasks, and monitor risk levels thr
 
 ### 📊 Dashboard
 
-![Dashboard](/src/screenshots/dashboard-1.png)
+![Dashboard](/src/screenshot-s/dashboard-1.png)
 
-![Dashboard](/src/screenshots/dashboard-2.png)
+![Dashboard](/src/screenshot-s/dashboard-2.png)
 
 **Displays:**
 - Total Machines
@@ -37,7 +37,7 @@ It helps track machines, schedule maintenance tasks, and monitor risk levels thr
 
 ### 📅 Upcoming Tasks
 
-![Upcoming Tasks](/src/screenshots/maintenance task records.png)
+![Upcoming Tasks](/src/screenshot-s/maintenance-task.png)
 
 - View scheduled tasks  
 - Mark tasks as complete  
@@ -47,7 +47,7 @@ It helps track machines, schedule maintenance tasks, and monitor risk levels thr
 
 ### ➕ Schedule Task
 
-![Schedule Task](screenshots/schedule-task.png)
+![Schedule Task](screenshot-s/schedule-task.png)
 
 - Assign new maintenance tasks  
 - Select machine and date  
