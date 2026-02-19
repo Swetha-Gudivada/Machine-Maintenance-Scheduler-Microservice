@@ -47,7 +47,7 @@ It helps track machines, schedule maintenance tasks, and monitor risk levels thr
 
 ### ➕ Schedule Task
 
-![Schedule Task](screenshot-s/schedule-task.png)
+![Schedule Task](/src/screenshot-s/schedule-task.png)
 
 - Assign new maintenance tasks  
 - Select machine and date  
