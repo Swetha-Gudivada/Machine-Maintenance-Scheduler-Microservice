@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Machine Maintenance Scheduler</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #eef2f7;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #1f2937;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h4 {
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            padding: 10px 0;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 220px;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .card-kpi {
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+        }
+
+        .chart-box {
+            width: 300px;
+            height: 300px;
+            margin: auto;
+        }
+
+        .records-section {
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        .progress {
+            height: 18px;
+        }
+
+        .upcoming-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h4>Maintenance</h4>
+    <a href="/">Dashboard</a>
+    <a href="/tasks/upcoming">Upcoming Tasks</a>
+    <a href="/tasks/schedule">Schedule Task</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+    <!-- Top Buttons -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/excel-upload" class="btn btn-success me-2">
+            Upload Excel
+        </a>
+
+        <button class="btn btn-outline-dark">
+            Export to PDF
+        </button>
+    </div>
+
+    <h1 class="mb-4">Smart Maintenance Dashboard</h1>
+
+    <!-- KPI CARDS -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card-kpi bg-primary shadow">
+                Total Machines
+                <div class="kpi-value" id="totalCounter"></div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-kpi bg-danger shadow">
+                High Risk Machines
+                <div class="kpi-value" id="riskCounter"></div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-kpi bg-warning shadow">
+                Overdue Machines
+                <div class="kpi-value" id="overdueCounter"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MACHINE RECORDS (TOP) -->
+    <div class="card shadow-sm records-section mb-4">
+        <div class="card-header fw-bold">
+            Machine Maintenance Records
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Last Maintenance</th>
+                    <th>Interval</th>
+                    <th>Status</th>
+                    <th>Next Due</th>
+                    <th>Risk</th>
+                    <th>Health %</th>
+                    <th>Tasks</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="machine : ${machines}">
+
+                    <td th:text="${machine.machineId}"></td>
+                    <td th:text="${machine.name}"></td>
+                    <td th:text="${machine.location}"></td>
+                    <td th:text="${machine.lastMaintenanceDate}"></td>
+                    <td th:text="${machine.maintenanceIntervalDays}"></td>
+
+                    <td>
+                        <span class="badge"
+                              th:classappend="${service.getDynamicStatus(machine) == 'Operational'} ? 'bg-success' :
+                              (${service.getDynamicStatus(machine) == 'Under Maintenance'} ? 'bg-warning text-dark' : 'bg-danger')"
+                              th:text="${service.getDynamicStatus(machine)}">
+                        </span>
+                    </td>
+
+                    <td th:text="${service.calculateNextDueDate(machine)}"></td>
+                    <td th:text="${service.getRiskLevel(service.calculateRiskScore(machine))}"></td>
+
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar bg-success"
+                                 th:style="'width:' + ${service.calculateHealthScore(machine)} + '%'"
+                                 th:text="${service.calculateHealthScore(machine)} + '%'">
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <a th:href="@{'/tasks/machine/' + ${machine.machineId}}"
+                           class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CHART + UPCOMING (NOW INSIDE MAIN CONTENT ✅) -->
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h6 class="text-center fw-bold">Risk Distribution</h6>
+                <div class="chart-box">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="upcoming-box">
+                <h6 class="fw-bold">Upcoming Tasks</h6>
+
+                <ul class="list-group">
+                    <li class="list-group-item text-muted"
+                        th:if="${#lists.isEmpty(upcomingTasks)}">
+                        No upcoming tasks available
+                    </li>
+
+                    <li class="list-group-item"
+                        th:each="task : ${upcomingTasks}"
+                        th:text="${task.taskDescription} + ' - ' + ${task.scheduledDate}">
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>  <!-- ✅ main-content closes here -->
+
+<script th:inline="javascript">
+
+    let total = [[${totalMachines}]];
+    let high = [[${highRisk}]];
+    let overdue = [[${overdue}]];
+
+    function animateValue(id, end) {
+        let start = 0;
+        let duration = 1000;
+        let step = end / (duration / 20);
+        let obj = document.getElementById(id);
+
+        let counter = setInterval(() => {
+            start += step;
+            if (start >= end) {
+                start = end;
+                clearInterval(counter);
+            }
+            obj.innerText = Math.floor(start);
+        }, 20);
+    }
+
+    animateValue("totalCounter", total);
+    animateValue("riskCounter", high);
+    animateValue("overdueCounter", overdue);
+
+    let low = [[${lowRisk}]];
+    let medium = [[${mediumRisk}]];
+
+    new Chart(document.getElementById('riskChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Low','Medium','High'],
+            datasets: [{
+                data: [low, medium, high],
+                backgroundColor: ['#0d6efd','#ffc107','#dc3545']
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>
